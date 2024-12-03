@@ -1,44 +1,38 @@
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import userRouter from './routes/user.routes'
+dotenv.config();
+
+const app = express();
 import { WebSocketServer, WebSocket } from "ws";
+const httpServer = app.listen(8080)
+const wss = new WebSocket.Server({server:httpServer});
 
-const wss = new WebSocketServer({ port: 8080 });
+//middlewares
+app.use(express.json());
 
-interface User {
-    socket: WebSocket;
-    room: string;
-}
+//connect db
+const connectToDB = async()=>{
+    try {
+        await mongoose.connect('mongodb://localhost:27017/chatapp');
+        console.log("connected to db");
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+};
 
-let allSockets: User[] = [];
+connectToDB();
 
-wss.on("connection", (socket) => {
+//api's
+app.use('/api/v1', userRouter);
 
-    socket.on("message", (message) => {
-        // @ts-ignore
-        const parsedMessage = JSON.parse(message);
-        if (parsedMessage.type == "join") {
-            console.log("user joined room " + parsedMessage.payload.roomId);
-            allSockets.push({
-                socket,
-                room: parsedMessage.payload.roomId
-            })
-        }
+// let allSockets: User[] = [];
+// const connections = new Map<String, WebSocket>();
 
-        if (parsedMessage.type == "chat") {
-            console.log("user wants to chat");
-            // const currentUserRoom = allSockets.find((x) => x.socket == socket).room
-            let currentUserRoom = null;
-            for (let i = 0; i < allSockets.length; i++) {
-                if (allSockets[i].socket == socket) {
-                    currentUserRoom = allSockets[i].room
-                }
-            }
-
-            for (let i = 0; i < allSockets.length; i++) {
-                if (allSockets[i].room == currentUserRoom) {
-                    allSockets[i].socket.send(parsedMessage.payload.message)
-                }
-            }
-        }
-
-    })
-
-})
+// wss.on("connection", (socket) => {
+    
+    
+// });
