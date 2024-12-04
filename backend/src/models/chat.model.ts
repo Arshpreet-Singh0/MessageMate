@@ -12,7 +12,7 @@ const chatSchema = new Schema({
     message : {
         type : String,
     }
-});
+},{timestamps : true});
 
 const Chat = model("Chat", chatSchema);
 export default Chat;

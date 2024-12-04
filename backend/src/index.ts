@@ -8,8 +8,9 @@ dotenv.config();
 
 import Chat from './models/chat.model';
 import userRouter from './routes/user.routes';
+import chatRouter from './routes/chat.routes'
 
-const secretKey = process.env.SECRET_KEY || "secret_key_here";
+const secretKey = process.env.SECRET_KEY || " ";
 
 const app = express();
 const httpServer = app.listen(8080);
@@ -32,10 +33,11 @@ connectToDB();
 
 // API routes
 app.use('/api/v1', userRouter);
+app.use('/api/v1', chatRouter);
 
 const connections = new Map<String, WebSocket>();
 
-wss.on("connection", (socket: WebSocket, request: any) => {
+wss.on("connection", (socket: WebSocket, request: Request) => {
     const token = request.headers['authorization'];
     console.log("Token:", token);
 
