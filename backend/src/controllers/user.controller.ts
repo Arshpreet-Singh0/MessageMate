@@ -15,7 +15,6 @@ export const signup = async(req:Request, res:Response)=>{
             });
             return;
         }
-        console.log(username, password);
         
         const user = await User.findOne({username});
 
