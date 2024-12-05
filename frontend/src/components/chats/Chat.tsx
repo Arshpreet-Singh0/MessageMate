@@ -2,40 +2,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { EllipsisVertical, Phone, SendHorizontal, Video } from "lucide-react";
 import { Input } from "../ui/input";
 import { useAppSelector } from "@/hooks/hook";
-import { isUserLoggedIn } from "@/redux/authSlice";
+import { isUserLoggedIn, UserState } from "@/redux/authSlice";
+interface propsType {
+  currentChat? : string | null,
+  // setCurrentChat : (chat : string) => void,
+  setChats : (chat : any) => void,
+  chats? : {}
+};
 
-const chats = [
-    {
-        sender : "me",
-        receiver : "shadcn",
-        msg : "hello"
-    },
-    {
-        sender : "me",
-        receiver : "shadcn",
-        msg : "how are you"
-    },
-    {
-        sender : "Shadcn",
-        receiver : "me",
-        msg : "hi"
-    },
-    {
-        sender : "Shadcn",
-        receiver : "me",
-        msg : "i am good"
-    },
-    {
-        sender : "me",
-        receiver : "shadcn",
-        msg : "ok"
-    },
-]
-
-const Chat = () => {
+const Chat = ({currentChat, chats, setChats} : propsType) => {
     // const {user} = useAppSelector(state=>state.auth);
     const userExist = useAppSelector(isUserLoggedIn)
     console.log(userExist);
+    const {user} : UserState  = useAppSelector((store) => store.auth);
     
   return (
     <div className="flex flex-col flex-1 relative h-screen bg-[#242427]">
@@ -52,7 +31,7 @@ const Chat = () => {
             </Avatar>
           </div>
           <div className="ml-4">
-            <h2 className="text-sm font-bold">Shadcn</h2>
+            <h2 className="text-sm font-bold">{currentChat}</h2>
             <p className="text-sm text-gray-400">last seen 11:30 AM</p>
           </div>
         </div>
@@ -65,19 +44,19 @@ const Chat = () => {
 
       {/* Chat Messages Section */}
       <div className="flex-1 overflow-y-auto p-4 bg-[#242427]">
-      {chats?.map((chat, index) => (
+      {chats?.map((chat:object, index) => (
         <div
           key={index}
           className={`flex ${
-            chat.sender === "me" ? "justify-end" : "justify-start"
+            chat?.sender === user?.username ? "justify-end" : "justify-start"
           } mb-4`}
         >
           <div
             className={`${
-              chat.sender === "me" ? "bg-blue-500" : "bg-gray-800"
+              chat?.sender === user?.username ? "bg-blue-500" : "bg-gray-800"
             } text-white p-3 rounded-lg max-w-xs`}
           >
-            {chat.msg}
+            {chat?.message}
           </div>
         </div>
       ))}

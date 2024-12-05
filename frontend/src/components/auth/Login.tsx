@@ -52,7 +52,7 @@ const Login = () => {
     
   }
   return (
-    <div className="flex bg-[#1c1c1e]">
+    <div className="flex bg-gray-900">
         <div className="flex justify-center items-center flex-col gap-8 xl:w-[700px] h-screen text-white w-full">
       <h1 className="text-3xl font-bold text-[#DD9538]">Message <span className="text-[#7733A6]">Mate</span></h1>
           <div className="border px-10 py-5 rounded-lg w-96">

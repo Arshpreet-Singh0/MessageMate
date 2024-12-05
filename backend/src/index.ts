@@ -66,11 +66,11 @@ wss.on("connection", (socket: WebSocket, request: Request) => {
 
         if(!connections.has(userName)) connections.set(userName, socket);
 
-        socket.on("message", async (message: string) => {
+        socket.on("message", async (message) => {
             const parsedMessage = JSON.parse(message);
 
             if (parsedMessage.type === "chat") {
-                const receiver = parsedMessage.payload.receiverName;
+                const receiver = parsedMessage.payload.receiver;
                 await Chat.create({
                     sender: userName,
                     receiver : receiver,
