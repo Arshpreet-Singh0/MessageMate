@@ -5,6 +5,15 @@ import jwt from 'jsonwebtoken';
 
 const secretKey = process.env.SECRET_KEY || " ";
 
+interface User {
+    _id : string,
+    username : string,
+    password? : string,
+    friends? : {
+        _id : string,
+        username : string,
+    }
+}
 export const signup = async(req:Request, res:Response)=>{
     try {
         const {username, password} = req.body;
@@ -52,7 +61,9 @@ export const login = async(req:Request, res:Response)=>{
             });
             return;
         }
-        const user = await User.findOne({username});
+        const user = await User.findOne({username}).populate({
+            path : 'friends',
+        });
         
         if(!user){
             res.status(400).json({
@@ -70,12 +81,21 @@ export const login = async(req:Request, res:Response)=>{
                 success : false,
             });
             return;
+        };
+
+        let userInfo = {
+            _id : user._id,
+            username : user.username,
+            friends : user.friends
         }
 
-        const token = jwt.sign({userid : user._id}, secretKey, {expiresIn : '1d'});
+        const token = jwt.sign({userName : user.username}, secretKey, {expiresIn : '1d'});
 
         res.status(200).json({
             token,
+            user : userInfo,
+            message : "Login Successfull" ,
+            success : true,
         });
     } catch (error) {
         console.log(error);

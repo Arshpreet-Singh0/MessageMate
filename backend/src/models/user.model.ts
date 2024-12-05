@@ -10,6 +10,9 @@ const userSchems = new mongoose.Schema({
         type : String,
         required : true
     },
+    friends : [{
+        type : String
+    }]
 },{timestamps:true});
 
 const User = mongoose.model("User",userSchems);

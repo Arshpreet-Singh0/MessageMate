@@ -13,7 +13,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
             })
             return;    
         }
-        req.userid = (decoded as JwtPayload).userid;
+        req.userName = (decoded as JwtPayload).userName;
         next();
     } else {
         res.status(403).json({

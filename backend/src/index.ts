@@ -3,18 +3,27 @@ import mongoose from 'mongoose';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { WebSocketServer, WebSocket } from "ws";
+import cors from 'cors';
 
 dotenv.config();
 
-import Chat from './models/chat.model';
+import Chat, { FriendRequest } from './models/chat.model';
 import userRouter from './routes/user.routes';
 import chatRouter from './routes/chat.routes'
+import User from './models/user.model';
 
 const secretKey = process.env.SECRET_KEY || " ";
 
 const app = express();
 const httpServer = app.listen(8080);
 const wss = new WebSocket.Server({ server: httpServer });
+
+//cors
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+    methods : ['get','post'],
+}));
 
 // Middlewares
 app.use(express.json());
@@ -50,29 +59,69 @@ wss.on("connection", (socket: WebSocket, request: Request) => {
         const decoded = jwt.verify(token, secretKey) as JwtPayload;
         console.log("Decoded:", decoded);
 
-        const userId = decoded.userid as string;
+        const userName = decoded.userName  as string;
+        if (!userName) {
+            throw new Error("Invalid user in token");
+        }
 
-        if(!connections.has(userId)) connections.set(userId, socket);
+        if(!connections.has(userName)) connections.set(userName, socket);
 
         socket.on("message", async (message: string) => {
             const parsedMessage = JSON.parse(message);
 
             if (parsedMessage.type === "chat") {
-                const receiverId = parsedMessage.payload.receiverId;
+                const receiver = parsedMessage.payload.receiverName;
                 await Chat.create({
-                    sender: userId,
-                    receiver : receiverId,
+                    sender: userName,
+                    receiver : receiver,
                     message : parsedMessage.payload.message
                 })
                 
-                if (connections.has(receiverId)) {
-                    const receiverSocket = connections.get(receiverId);
+                if (connections.has(receiver)) {
+                    const receiverSocket = connections.get(receiver);
                     receiverSocket?.send(JSON.stringify({
-                        senderId: userId,
+                        sender: userName,
                         message: parsedMessage.payload.message
                     }));
                 }
             }
+
+            if(parsedMessage.type == "friend-request"){
+                const receiver = parsedMessage.payload.receiver;
+                if (!receiver || receiver === userName) {
+                    console.error("Invalid friend request payload");
+                    return;
+                }
+
+                const existingRequest = await FriendRequest.findOne({
+                    sender: userName,
+                    receiver: receiver,
+                });
+
+                if (existingRequest) {
+                    console.log("Friend request already exists");
+                    return;
+                }
+                await FriendRequest.create({
+                    sender: userName,
+                    receiver : receiver,
+                });
+                if(connections.has(receiver)){
+                    const receiverSocket = connections.get(receiver);
+                    receiverSocket?.send(JSON.stringify({
+                        sender: userName,
+                        type : "friend-request"
+                    }));
+                }
+
+            };
+
+
+        });
+
+        socket.on("close", () => {
+            console.log(`Socket closed for user: ${userName}`);
+            connections.delete(userName);
         });
 
     } catch (error) {
