@@ -21,8 +21,9 @@ export default {
   				accent: 'hsl(var(--sidebar-accent))',
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  				ring: 'hsl(var(--sidebar-ring))',
+  			},
+			'custom-blue' : 'rgba(19, 19, 22, 0.8)'
   		}
   	}
   },

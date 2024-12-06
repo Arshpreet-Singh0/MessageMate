@@ -47,8 +47,9 @@ app.use('/api/v1', chatRouter);
 const connections = new Map<String, WebSocket>();
 
 wss.on("connection", (socket: WebSocket, request: Request) => {
-    const token = request.headers['authorization'];
-    console.log("Token:", token);
+    const queryParams = new URLSearchParams(request.url.split('?')[1]);
+    const token = queryParams.get('token');
+    // console.log("Token:", token);
 
     if (!token) {
         socket.close(4000, "Token is required");
@@ -57,7 +58,7 @@ wss.on("connection", (socket: WebSocket, request: Request) => {
 
     try {
         const decoded = jwt.verify(token, secretKey) as JwtPayload;
-        console.log("Decoded:", decoded);
+        // console.log("Decoded:", decoded);
 
         const userName = decoded.userName  as string;
         if (!userName) {
@@ -66,7 +67,7 @@ wss.on("connection", (socket: WebSocket, request: Request) => {
 
         if(!connections.has(userName)) connections.set(userName, socket);
 
-        socket.on("message", async (message) => {
+        socket.on("message", async (message:string) => {
             const parsedMessage = JSON.parse(message);
 
             if (parsedMessage.type === "chat") {
