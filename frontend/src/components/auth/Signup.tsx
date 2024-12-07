@@ -2,14 +2,11 @@ import { FormEvent, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@/hooks/hook";
-import { setUser } from "@/redux/authSlice";
 import Form from "./Form";
 const API_END_POINT = import.meta.env.VITE_API_END_POINT;
 
-const Login = () => {
+const Signup = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [input, setInput] = useState({
     username: "",
     password: "",
@@ -23,15 +20,10 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API_END_POINT}/login`, input);
-      console.log(res);
-
+      const res = await axios.post(`${API_END_POINT}/signup`, input);
       if (res?.data?.success) {
         toast.success(res?.data?.message);
-        localStorage.setItem("token", res?.data?.token);
-        console.log(res);
-        dispatch(setUser(res?.data?.user));
-        navigate("/");
+        navigate("/login");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -48,9 +40,9 @@ const Login = () => {
   };
   return (
     <>
-      <Form input={input} handleInputChange={handleInputChange} handleSubmit={handleSubmit} loading={loading} heading="Login"/>
+      <Form input={input} handleInputChange={handleInputChange} handleSubmit={handleSubmit} loading={loading} heading="Create an account"/>
     </>
   );
 };
 
-export default Login;
+export default Signup;

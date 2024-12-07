@@ -1,8 +1,8 @@
-import Login from "./components/auth/Login";
 import Home from "./components/Home";
-// import Sidebar from "./components/navbar/Sidebar"
 import {BrowserRouter ,Routes, Route} from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
+import Login from "./components/auth/Login";
+import Signup from "./components/auth/Signup";
 
 const App = () => {
 
@@ -14,6 +14,7 @@ const App = () => {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
         </Routes>
     </BrowserRouter>
     </>
