@@ -25,6 +25,22 @@
   }
 }
 
-body{
+/* Default background for larger screens */
+.body-background {
   background-image: url('https://res.cloudinary.com/djusmuols/image/upload/bg_cnplpx.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Adjustments for screens smaller than 600px */
+@media (max-width: 600px) {
+  .body-background {
+      background-image: url('https://res.cloudinary.com/djusmuols/image/upload/bg_cnplpx.png'); /* Smaller or different image for small screens */
+      background-size: contain; /* or adjust as needed */
+      background-position: top;
+  }
+}
+
+.mobile{
+  background-image: url('https://img.freepik.com/free-vector/minimal-line-art-galaxy-mobile-wallpaper-design_53876-97355.jpg?t=st=1733552677~exp=1733556277~hmac=afb2a5ce14047e82e8be5e0debb44a0721595f03c00dd39eb9017ceace510d19&w=740');
 }

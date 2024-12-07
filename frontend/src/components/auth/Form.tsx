@@ -3,6 +3,8 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { FormEvent } from "react";
+import { Link } from "react-router-dom";
+import Navbar from "../navbar/Navbar";
 
 interface propsType {
     input : {
@@ -13,14 +15,13 @@ interface propsType {
     handleSubmit : (e:FormEvent<HTMLFormElement>)=>void,
     loading : boolean,
     heading : string,
+    isLoginForm? : boolean
 }
-const Form = ({input, handleInputChange, handleSubmit, loading, heading} : propsType) => {
+const Form = ({input, handleInputChange, handleSubmit, loading, heading, isLoginForm} : propsType) => {
   return (
-    <>
+    <div className="body-background h-screen">
+      <Navbar />
       <div className="flex items-center justify-center h-[90vh]">
-        {/* <div className="w-1/2">
-          <img src="" alt="" />
-      </div> */}
         <div className="w-[405px] h-[400px] border border-black rounded-xl bg-custom-blue text-white p-10">
           <form onSubmit={handleSubmit}>
             <h1 className="text-2xl font-bold text-center p-2">{heading}</h1>
@@ -60,9 +61,16 @@ const Form = ({input, handleInputChange, handleSubmit, loading, heading} : props
               </Button>
             )}
           </form>
+          {
+            isLoginForm ? (
+              <h1 className="mt-5 text-center opacity-75"> Don't have an account? <Link to="/signup" className="text-blue-600">Signup</Link></h1>
+            ) : (
+              <h1 className="mt-5 text-center opacity-75"> Already have an account? <Link to="/login" className="text-blue-600">Login</Link></h1>
+            )
+          }
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

@@ -48,7 +48,7 @@ const Login = () => {
   };
   return (
     <>
-      <Form input={input} handleInputChange={handleInputChange} handleSubmit={handleSubmit} loading={loading} heading="Login"/>
+      <Form input={input} handleInputChange={handleInputChange} handleSubmit={handleSubmit} loading={loading} heading="Login" isLoginForm={true}/>
     </>
   );
 };

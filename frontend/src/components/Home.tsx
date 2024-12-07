@@ -3,6 +3,7 @@ import Sidebar from "../components/navbar/Sidebar"
 import Chat from "./chats/Chat"
 import RecentChats from "./chats/RecentChats"
 import axios from "axios";
+// import Navbar from "./navbar/Navbar";
 const API_END_POINT = import.meta.env.VITE_API_END_POINT;
 
 const Home = () => {
@@ -37,11 +38,13 @@ const Home = () => {
   
   
   return (
+    <>
+        {/* <Navbar /> */}
     <div className="flex">
         <Sidebar />
         <RecentChats setCurrentChat={setCurrentChat}/>
         <Chat currentChat={currentChat} chats={chats} setChats={setChats}/>
-    </div>
+    </div></>
   )
 }
 

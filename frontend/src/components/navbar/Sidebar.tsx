@@ -25,14 +25,14 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="bg-gray-900 text-white h-screen w-64 flex flex-col border-r border-gray-700">
+    <aside className="bg-black text-white h-screen w-20 flex flex-col border-r border-gray-700">
       {/* Sidebar Header */}
-      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700 ">
-        <h1 className="text-xl font-bold">Message Mate</h1>
+      {/* <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700 "> */}
+        {/* <h1 className="text-xl font-bold">Message Mate</h1> */}
         {/* <Button variant="ghost" className="text-white">
           <Menu className="w-5 h-5" />
         </Button> */}
-      </div>
+      {/* </div> */}
 
       {/* Navigation */}
       <nav className="flex-1 px-4 py-4 space-y-2">
@@ -44,8 +44,8 @@ const Sidebar = () => {
               "flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-gray-800"
             }
           >
-            <item.icon className="w-5 h-5" />
-            <span>{item.name}</span>
+            <item.icon className="w-10 h-8" />
+            {/* <span>{item.name}</span> */}
           </a>
         ))}
       </nav>
@@ -59,7 +59,7 @@ const Sidebar = () => {
           />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <p className="text-lg">{user?.username}</p>
+        {/* <p className="text-lg">{user?.username}</p> */}
       </div>
     </aside>
   );

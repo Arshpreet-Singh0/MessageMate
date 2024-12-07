@@ -11,18 +11,18 @@ interface propsType {
 const RecentChats = ({setCurrentChat}:propsType) => {
   const {user} : UserState = useAppSelector((store) => store.auth);
   return (
-    <div className="h-screen w-96 bg-gray-900 flex flex-col text-white">
-      {/* <div className="flex items-center px-4 py-4 border-b border-gray-800">
-            <h1 className="text-xl font-bold">Messages</h1>
-        </div> */}
+    <div className="h-screen w-[500px] bg-black flex flex-col text-white">
+      <div className="flex items-center px-4 py-4 border-b border-gray-800">
+            <h1 className="text-xl font-bold text-[#1570EF]">Messages Mate</h1>
+        </div>
       <div className="flex items-center px-4 py-4">
-        <Input placeholder="Search" className="rounded-xl py-5" />
+        <Input placeholder="Search" className="rounded-md py-5" />
         {/* <Search /> */}
       </div>
-      <h3 className="text-zinc-400 ml-2 text-sm mb-1">Recent Chats</h3>
-      <div className="flex flex-col ">
+      <h3 className="text-white px-2 ml-2 text-2xl mb-4">Messages</h3>
+      <div className="flex flex-col border-t border-gray-700">
         {user?.friends?.map((friend) => (
-          <div className="flex items-center justify-between px-4 border-b border-gray-700 h-[72px] bg-gray-800" onClick={()=>setCurrentChat(friend)}>
+          <div className="flex items-center justify-between px-4 border-b border-gray-700 h-[72px] bg-[#0b0916]" onClick={()=>setCurrentChat(friend)}>
             <div className="flex items-center">
               <Avatar>
                 <AvatarImage
