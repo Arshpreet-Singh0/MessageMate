@@ -88,6 +88,8 @@ wss.on("connection", (socket: WebSocket, request: Request) => {
             }
 
             if(parsedMessage.type == "friend-request"){
+                console.log(parsedMessage);
+                
                 const receiver = parsedMessage.payload.receiver;
                 if (!receiver || receiver === userName) {
                     console.error("Invalid friend request payload");

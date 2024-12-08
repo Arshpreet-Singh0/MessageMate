@@ -99,5 +99,27 @@ export const login = async(req:Request, res:Response)=>{
         });
     } catch (error) {
         console.log(error);
+    };
+};
+
+export const getUsersByUserName = async(req : Request, res : Response)=>{
+    try {
+        const username = req.params.username;
+
+        const user = await User.find({
+            $or: [
+                { username: { $regex: username, $options: "i" } },
+            ]
+        }).select({
+            username
+        });
+        
+        res.status(200).json({
+            user
+        })
+
+    } catch (error) {
+        console.log(error);
+        
     }
 }

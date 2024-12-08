@@ -2,8 +2,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { EllipsisVertical, Phone, SendHorizontal, Video } from "lucide-react";
 import { Input } from "../ui/input";
 import { useAppSelector } from "@/hooks/hook";
-import { isUserLoggedIn, UserState } from "@/redux/authSlice";
-import { useEffect, useRef } from "react";
+import { UserState } from "@/redux/authSlice";
+import { useRef } from "react";
 
 interface chatType {
   sender: string;
@@ -15,58 +15,16 @@ interface propsType {
   currentChat?: string | null;
   setChats: (chat: any) => void;
   chats?: chatType[];
+  scrollToBottom : ()=>void,
+  wsRef : React.RefObject<WebSocket>,
+  messagesEndRef : React.RefObject<HTMLDivElement>
 }
 
-const Chat = ({ currentChat, chats, setChats }: propsType) => {
+const Chat = ({ currentChat, chats, setChats, wsRef, scrollToBottom,messagesEndRef }: propsType) => {
   // const userExist = useAppSelector(isUserLoggedIn);
   const { user }: UserState = useAppSelector((store) => store.auth);
-
-  const wsRef = useRef<WebSocket | null>(null);
+  
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
-  // Scroll to the bottom of the chat
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    const ws = new WebSocket(
-      `ws://localhost:8080?token=${localStorage.getItem("token")}`
-    );
-
-    ws.onopen = () => {
-      console.log("WebSocket connected");
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        setChats((prevChats: chatType[]) => [...prevChats, data]);
-        scrollToBottom(); // Scroll to the latest message
-      } catch (error) {
-        console.error("Error parsing WebSocket message:", error);
-      }
-    };
-
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    ws.onclose = () => {
-      console.log("WebSocket disconnected");
-    };
-
-    wsRef.current = ws;
-
-    return () => {
-      ws.close();
-    };
-  }, [setChats]);
-
-  useEffect(() => {
-    scrollToBottom(); // Ensure the chat is scrolled to the bottom on initial render
-  }, [chats]);
 
   const handleSendMessage = () => {
     const message = inputRef.current?.value.trim();
@@ -119,12 +77,7 @@ const Chat = ({ currentChat, chats, setChats }: propsType) => {
           </div>
 
           <div
-            className="flex-1 overflow-y-auto p-4 pb-16"
-            style={{
-              backgroundImage:
-                'url("https://img.freepik.com/free-vector/elegant-technology-background_1035-4674.jpg?t=st=1733552776~exp=1733556376~hmac=498168be3474dbaa586210768967fe2cb6514a0be8b998b9ddedc39f2645d4a8&w=1380")',
-              backgroundSize: "contain",
-            }}
+            className="flex-1 overflow-y-auto p-4 pb-16 bg-black"
           >
             {chats?.map((chat: chatType, index) => (
               <div

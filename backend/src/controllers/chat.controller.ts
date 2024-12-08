@@ -30,6 +30,22 @@ export const acceptFriendRequest = async(req:Request , res:Response)=>{
     try {
         const userName = req.userName;
         const friendName = req.params.sender;
+        const user = await User.findOne({username:userName});
+        if(user==null){
+            res.json({
+                message:"User not found",
+                success : false,
+            })
+            return;
+        }
+        const isAlreadyExist = user.friends.find((f)=>(f === friendName));
+        if(isAlreadyExist){
+            res.json({
+                message:"You are already friends",
+                success : false,
+                });
+                return;
+            }
         await FriendRequest.findOneAndDelete({
             sender: friendName,
             receiver: userName
@@ -47,9 +63,23 @@ export const acceptFriendRequest = async(req:Request , res:Response)=>{
           res.status(200).json({
             message: "Friend request accepted",
             success : true,
-          })
+          });
     } catch (error) {
         console.log(error);
         
+    }
+}
+
+export const getFriendRequest = async(req:Request, res:Response)=>{
+    try {
+        const userName = req.userName;
+
+        const requests = await FriendRequest.find({receiver: userName});
+
+        res.json({
+            requests,
+        })
+    } catch (error) {
+        console.log(error);
     }
 }
